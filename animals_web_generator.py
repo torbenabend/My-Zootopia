@@ -8,7 +8,8 @@ ANIMAL_CHARACTERISTICS = {
     "Location": lambda d: (
         ", ".join(d.get("locations")) if d.get("locations") else None
     ),
-    "Type": lambda d: d.get("characteristics", {}).get("type")
+    "Type": lambda d: d.get("characteristics", {}).get("type"),
+    "Skin type": lambda d: d.get("characteristics", {}).get("skin_type")
 }
 
 
@@ -70,10 +71,41 @@ def render_animal_html(animals):
     return animals_html
 
 
+def get_skin_types(animals):
+    """ Get every possible skin type"""
+    skin_types = set()
+    for animal in animals:
+        skin_type = ANIMAL_CHARACTERISTICS["Skin type"](animal)
+        if skin_type:
+            skin_types.add(skin_type)
+    return skin_types
+
+
+def user_selection_skin_type(skin_types):
+    """ Prompt the user to select a skin type """
+    while True:
+        print("Skin types:")
+        for skin_type in skin_types:
+            print(f"- {skin_type}")
+        user_skin_type = input("\nPlease enter a skin type: ")
+        if user_skin_type in skin_types:
+            return user_skin_type
+        print("Invalid input! Please try again.\n")
+
+
 def main():
+    # LOAD DATA
     animals_data = load_data("animals_data.json")
     template_data = load_html_template("animals_template.html")
-    animals_html = render_animal_html(animals_data)
+    # FILTER BY SKIN TYPE
+    skin_types = get_skin_types(animals_data)
+    user_skin_type = user_selection_skin_type(skin_types)
+    animals_data_filtered = [
+        animal for animal in animals_data
+        if ANIMAL_CHARACTERISTICS["Skin type"](animal) == user_skin_type
+    ]
+    # CREATE WEBPAGE
+    animals_html = render_animal_html(animals_data_filtered)
     animals_webpage = template_data.replace(
         "__REPLACE_ANIMALS_INFO__", animals_html
     )
