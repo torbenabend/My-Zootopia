@@ -17,24 +17,44 @@ def load_data(file_path):
         return json.load(handle)
 
 
-def print_field(label, value):
-    """ Print a label and its value """
-    if value:
-        print(f"{label}: {value}")
+def load_html_template(file_path):
+    """ Load an HTML template """
+    with open(file_path, "r") as handle:
+        return handle.read()
 
 
-def print_animal_information(animal_info):
-    """ Print animal information """
+def create_webpage(html_input):
+    """ Create html file for webpage """
+    with open("animals.html", "w") as html:
+        html.write(html_input)
+
+
+def get_animal_characteristics(animal_info):
+    """ Collect animal characteristics """
+    characteristics = ""
     for characteristic, extractor in ANIMAL_CHARACTERISTICS.items():
         value = extractor(animal_info)
-        print_field(characteristic, value)
-    print()
+        if value is not None:
+            characteristics += f"{characteristic}: {value}\n"
+    return characteristics + "\n"
+
+
+def render_animal_characteristics(animals):
+    """ Render animal characteristics for each animal """
+    animals_html = ""
+    for animal in animals:
+        animals_html += get_animal_characteristics(animal)
+    return animals_html
 
 
 def main():
     animals_data = load_data("animals_data.json")
-    for animal in animals_data:
-        print_animal_information(animal)
+    template_data = load_html_template("animals_template.html")
+    animals_html = render_animal_characteristics(animals_data)
+    animals_webpage = template_data.replace(
+        "__REPLACE_ANIMALS_INFO__", animals_html
+    )
+    create_webpage(animals_webpage)
 
 
 if __name__ == "__main__":
