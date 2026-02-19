@@ -3,6 +3,7 @@ import json
 
 ANIMAL_CHARACTERISTICS = {
     "Name": lambda d: d.get("name"),
+    "Scientific name": lambda d: d.get("taxonomy", {}).get("scientific_name"),
     "Diet": lambda d: d.get("characteristics", {}).get("diet"),
     "Location": lambda d: (
         ", ".join(d.get("locations")) if d.get("locations") else None
@@ -45,9 +46,9 @@ def render_animal_characteristic(characteristic, animal_info):
     rendered_characteristic = ""
     animal_characteristic = ANIMAL_CHARACTERISTICS[characteristic](animal_info)
     if animal_characteristic is not None:
-        rendered_characteristic += (f'<strong>{characteristic.capitalize()}'
+        rendered_characteristic += (f'<li style="list-style-type: disc"><strong>{characteristic.capitalize()}'
                                     f':</strong> ')
-        rendered_characteristic += f'{animal_characteristic}<br/>'
+        rendered_characteristic += f'{animal_characteristic}</li>'
     return rendered_characteristic
 
 
@@ -57,11 +58,14 @@ def render_animal_html(animals):
     for animal in animals:
         animals_html += '<li class="cards__item">'
         animals_html += render_animal_name(animal)
-        animals_html += '<p class="card__text">'
+        animals_html += '<div class="card__text">'
+        animals_html += '<ul>'
+        animals_html += render_animal_characteristic("Scientific name", animal)
         animals_html += render_animal_characteristic("Diet", animal)
         animals_html += render_animal_characteristic("Location", animal)
         animals_html += render_animal_characteristic("Type", animal)
-        animals_html += '</p>'
+        animals_html += '</ul>'
+        animals_html += '</div>'
         animals_html += "</li>"
     return animals_html
 
