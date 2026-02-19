@@ -29,13 +29,35 @@ def create_webpage(html_input):
         html.write(html_input)
 
 
+def render_animal_name(animal_info):
+    rendered_name = ""
+    animal_name = ANIMAL_CHARACTERISTICS["Name"](animal_info)
+    if animal_name is not None:
+        rendered_name += '<div class="card__title">'
+        rendered_name += f'{animal_name}'
+        rendered_name += '</div>'
+    return rendered_name
+
+
+def render_animal_characteristic(characteristic, animal_info):
+    rendered_characteristic = ""
+    animal_characteristic = ANIMAL_CHARACTERISTICS[characteristic](animal_info)
+    if animal_characteristic is not None:
+        rendered_characteristic += (f'<strong>{characteristic.capitalize()}'
+                                    f':</strong> ')
+        rendered_characteristic += f'{animal_characteristic}<br/>'
+    return rendered_characteristic
+
+
 def get_animal_characteristics(animal_info):
     """ Collect animal characteristics """
     characteristics = ""
     for characteristic, extractor in ANIMAL_CHARACTERISTICS.items():
         value = extractor(animal_info)
         if value is not None:
-            characteristics += f"{characteristic}: {value}<br/>\n"
+            if characteristics == "Name":
+                characteristics += '<div class="card__title">'
+                characteristics += f'{value}<br/>\n'
     return characteristics + "\n"
 
 
@@ -44,7 +66,12 @@ def render_animal_characteristics(animals):
     animals_html = ""
     for animal in animals:
         animals_html += '<li class="cards__item">'
-        animals_html += get_animal_characteristics(animal)
+        animals_html += render_animal_name(animal)
+        animals_html += '<p class="card__text">'
+        animals_html += render_animal_characteristic("Diet", animal)
+        animals_html += render_animal_characteristic("Location", animal)
+        animals_html += render_animal_characteristic("Type", animal)
+        animals_html += '</p>'
         animals_html += "</li>"
     return animals_html
 
