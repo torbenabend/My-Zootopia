@@ -35,7 +35,7 @@ def get_animal_characteristics(animal_info):
     for characteristic, extractor in ANIMAL_CHARACTERISTICS.items():
         value = extractor(animal_info)
         if value is not None:
-            characteristics += f"{characteristic}: {value}\n"
+            characteristics += f"{characteristic}: {value}<br/>\n"
     return characteristics + "\n"
 
 
@@ -43,7 +43,9 @@ def render_animal_characteristics(animals):
     """ Render animal characteristics for each animal """
     animals_html = ""
     for animal in animals:
+        animals_html += '<li class="cards__item">'
         animals_html += get_animal_characteristics(animal)
+        animals_html += "</li>"
     return animals_html
 
 
