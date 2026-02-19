@@ -30,6 +30,7 @@ def create_webpage(html_input):
 
 
 def render_animal_name(animal_info):
+    """ Render HTML syntax of animal name"""
     rendered_name = ""
     animal_name = ANIMAL_CHARACTERISTICS["Name"](animal_info)
     if animal_name is not None:
@@ -40,6 +41,7 @@ def render_animal_name(animal_info):
 
 
 def render_animal_characteristic(characteristic, animal_info):
+    """ Render HTML syntax of animal characteristics"""
     rendered_characteristic = ""
     animal_characteristic = ANIMAL_CHARACTERISTICS[characteristic](animal_info)
     if animal_characteristic is not None:
@@ -49,20 +51,8 @@ def render_animal_characteristic(characteristic, animal_info):
     return rendered_characteristic
 
 
-def get_animal_characteristics(animal_info):
-    """ Collect animal characteristics """
-    characteristics = ""
-    for characteristic, extractor in ANIMAL_CHARACTERISTICS.items():
-        value = extractor(animal_info)
-        if value is not None:
-            if characteristics == "Name":
-                characteristics += '<div class="card__title">'
-                characteristics += f'{value}<br/>\n'
-    return characteristics + "\n"
-
-
-def render_animal_characteristics(animals):
-    """ Render animal characteristics for each animal """
+def render_animal_html(animals):
+    """ Render animal information in HTML syntax for each animal """
     animals_html = ""
     for animal in animals:
         animals_html += '<li class="cards__item">'
@@ -79,7 +69,7 @@ def render_animal_characteristics(animals):
 def main():
     animals_data = load_data("animals_data.json")
     template_data = load_html_template("animals_template.html")
-    animals_html = render_animal_characteristics(animals_data)
+    animals_html = render_animal_html(animals_data)
     animals_webpage = template_data.replace(
         "__REPLACE_ANIMALS_INFO__", animals_html
     )
