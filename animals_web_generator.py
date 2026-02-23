@@ -15,19 +15,19 @@ ANIMAL_CHARACTERISTICS = {
 
 def load_data(file_path):
     """ Load a JSON file """
-    with open(file_path, "r") as handle:
+    with open(file_path, "r", encoding="utf-8") as handle:
         return json.load(handle)
 
 
 def load_html_template(file_path):
     """ Load an HTML template """
-    with open(file_path, "r") as handle:
+    with open(file_path, "r", encoding="utf-8") as handle:
         return handle.read()
 
 
 def create_webpage(html_input):
     """ Create html file for webpage """
-    with open("animals.html", "w") as html:
+    with open("animals.html", "w", encoding="utf-8") as html:
         html.write(html_input)
 
 
